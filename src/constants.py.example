@@ -1,0 +1,18 @@
+
+# Service integration
+service_root = 'https://metti.spaghettisfest.lu/api'
+service_auth = ('', '')
+
+# Facts
+count_speed = 0.05
+polling_interval = 10
+highlight_cooldown = 2
+destination = 'Kichen'
+
+# Matrix
+matrix_brightness = 50
+matrix_cols = 64
+matrix_hardware_mapping = 'adafruit-hat'
+matrix_pwm_bits = 4
+matrix_pwm_lsb_nanoseconds = 400
+matrix_rows = 32
