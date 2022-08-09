@@ -1,3 +1,5 @@
-/src/constants.py
-/font.bdf
+.DS_Store
+.gitignore
+/assets/font.bdf
 /log.txt
+/src/constants.py

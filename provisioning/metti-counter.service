@@ -1,0 +1,17 @@
+[Unit]
+Description=Daemon for metti-counter receipt counter server
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 src/index.py
+User=crew
+Group=root
+WorkingDirectory=/srv/metti-counter
+Restart=on-failure
+SyslogIdentifier=metti-counter
+RestartSec=5
+TimeoutStartSec=infinity
+
+[Install]
+WantedBy=multi-user.target

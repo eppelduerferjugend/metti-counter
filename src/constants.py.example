@@ -4,10 +4,10 @@ service_root = 'https://metti.spaghettisfest.lu/api'
 service_auth = ('', '')
 
 # Facts
-count_speed = 0.05
-polling_interval = 10
-highlight_cooldown = 2
-destination = 'Kichen'
+count_speed = 0.01
+polling_interval = 15
+highlight_cooldown = 5
+store_id = 2
 
 # Matrix
 matrix_brightness = 50

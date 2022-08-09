@@ -29,8 +29,8 @@ class Display_Thread(threading.Thread):
 
     # Configure font and colors
     font = graphics.Font()
-    font.LoadFont('font.bdf')
-    primaryColor = graphics.Color(255, 217, 0)
+    font.LoadFont('assets/IBMPlexMono-Regular.bdf')
+    primaryColor = graphics.Color(142, 96, 216)
     secondaryColor = graphics.Color(255, 255, 255)
 
     # Init loop
@@ -53,7 +53,7 @@ class Display_Thread(threading.Thread):
 
       # Draw digits to canvas
       canvas.Clear()
-      graphics.DrawText(canvas, font, 0, 25, color, str(count).zfill(4))
+      graphics.DrawText(canvas, font, 2, 25, color, str(count).zfill(4))
       canvas = matrix.SwapOnVSync(canvas)
 
       # Wait for next cycle
@@ -76,22 +76,22 @@ class ServiceExit(Exception):
     pass
 
 def shutdown_handler(signum, frame):
-  """ Raises an exception to gracefully end the process. """
+  """ Raise an exception to gracefully end the process """
   print('Caught signal {}'.format(signum))
   raise ServiceExit
 
-def fetch_completed_destination_items(destination):
-  """ Fetches completed item count for the given destination """
+def fetch_completed_store_items(store_id):
+  """ Fetch completed item count for the given destination """
   try:
     response = requests.request(
       'GET',
-      constants.service_root + '/stats',
+      constants.service_root + '/api/v1/stores/{}/stats'.format(str(store_id)),
       auth=constants.service_auth)
 
     if response.status_code == 200:
       data = response.json()
       # This may throw an 'AttributeError'
-      return data['orders']['completed'][constants.destination]['total']
+      return data['completedCount']
 
   except Exception as err:
     print('Fetching completed item count failed: {}'.format(str(err)))
@@ -112,7 +112,7 @@ def main():
     while True:
 
       # Update count
-      count = fetch_completed_destination_items(constants.destination)
+      count = fetch_completed_store_items(constants.store_id)
       if count != False:
         display_thread.setCount(count)
 

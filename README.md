@@ -1,9 +1,24 @@
 
 # metti-counter
 
-## Deployment
+## Provisioning
 
 Follow the instructions to build and run an [Adafruit RGB Matrix + Real Time Clock HAT on a Raspberry Pi](https://learn.adafruit.com/adafruit-rgb-matrix-plus-real-time-clock-hat-for-raspberry-pi/overview). This project tuns on a 64x32 LED matrix powered by a Raspberry Pi 3.
+
+Run install script:
+
+```bash
+curl https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/main/rgb-matrix.sh >rgb-matrix.sh
+sudo bash rgb-matrix.sh
+```
+
+And configure it with:
+
+```
+Interface board type: Adafruit RGB Matrix HAT + RTC
+Install RTC support: NO
+Optimize: Convenience (sound on, no soldering)
+```
 
 Configure `src/constants.py`:
 
@@ -11,34 +26,40 @@ Configure `src/constants.py`:
 cp src/constants.py.example src/constants.py
 ```
 
-Create BDF font file using [otf2bdf](https://www.math.nmsu.edu/%7Emleisher/Software/otf2bdf/):
-
-```bash
-otf2bdf RobotoMono-Bold.ttf -p 25 -o font.bdf
-```
-
 Upload repostory to the Raspberry Pi:
 
 ```bash
-rsync -aP --delete . pi@hostname:/opt/metti-counter/
+rsync -aP --delete . pi@hostname:/srv/metti-counter/
 ```
 
 Install Python3 dependencies for the `root` user:
 
 ```bash
-sudo pip3 install requests
-sudo pip3 install --upgrade requests[security]
+pip3 install requests
 ```
 
-Install service:
+To make the python counter server start at boot time as a daemon, install it as a service like so:
 
 ```bash
-sudo ln -s /opt/metti-counter/init.sh /etc/init.d/metti-counter
-sudo update-rc.d metti-counter defaults
+# Configure service
+sudo ln -s /srv/metti-counter/provisioning/metti-counter.service /etc/systemd/system/metti-counter.service
+
+# Enable service
+sudo systemctl enable metti-counter
+sudo systemctl daemon-reload
+
+# (Re-)start service
+sudo systemctl start metti-counter
+sudo systemctl restart metti-counter
+
+# Show service status
+sudo systemctl status metti-counter
 ```
 
-Uninstall service:
+## Prepare a new font
+
+Create BDF font file using [otf2bdf](http://sofia.nmsu.edu/~mleisher/Software/otf2bdf/):
 
 ```bash
-sudo update-rc.d metti-counter remove
+otf2bdf font.ttf -p 25 -o font.bdf
 ```
