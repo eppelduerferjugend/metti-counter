@@ -30,8 +30,8 @@ class Display_Thread(threading.Thread):
     # Configure font and colors
     font = graphics.Font()
     font.LoadFont('assets/IBMPlexMono-Regular.bdf')
-    primaryColor = graphics.Color(142, 96, 216)
-    secondaryColor = graphics.Color(255, 255, 255)
+    primaryColor = graphics.Color(255, 255, 255)
+    secondaryColor = graphics.Color(0, 255, 0)
 
     # Init loop
     update_time = 0
@@ -80,18 +80,18 @@ def shutdown_handler(signum, frame):
   print('Caught signal {}'.format(signum))
   raise ServiceExit
 
-def fetch_completed_store_items(store_id):
+def fetch_completed_item_quantity(supplier_id):
   """ Fetch completed item count for the given destination """
   try:
     response = requests.request(
       'GET',
-      constants.service_root + '/api/v1/stores/{}/stats'.format(str(store_id)),
-      auth=constants.service_auth)
+      constants.service_root + '/suppliers/{}'.format(str(supplier_id)),
+      headers={"Authorization": "Bearer " + constants.service_auth_token})
 
     if response.status_code == 200:
       data = response.json()
       # This may throw an 'AttributeError'
-      return data['completedCount']
+      return data['statistics']['completedItemQuantity']
 
   except Exception as err:
     print('Fetching completed item count failed: {}'.format(str(err)))
@@ -112,7 +112,7 @@ def main():
     while True:
 
       # Update count
-      count = fetch_completed_store_items(constants.store_id)
+      count = fetch_completed_item_quantity(constants.supplier_id)
       if count != False:
         display_thread.setCount(count)
 

@@ -1,13 +1,13 @@
 
 # Service integration
-service_root = 'https://metti.spaghettisfest.lu/api'
-service_auth = ('', '')
+service_root = 'https://api.kescht.lu'
+service_auth_token = ''
 
 # Facts
 count_speed = 0.01
 polling_interval = 15
 highlight_cooldown = 5
-store_id = 2
+supplier_id = 11
 
 # Matrix
 matrix_brightness = 50
